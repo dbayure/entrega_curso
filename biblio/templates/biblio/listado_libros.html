@@ -1,0 +1,13 @@
+{% extends "biblio/base_generic.html" %}
+
+{% block content %}
+{% if lista_libros %}
+    <ul>
+    {% for libro in lista_libros %}
+        <li><a href="/biblio/libro/{{ libro.id }}/">{{ libro.titulo }}</a></li>
+    {% endfor %}
+    </ul>
+{% else %}
+    <p>No existen libros a mostrar.</p>
+{% endif %}
+{% endblock %}
