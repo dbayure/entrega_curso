@@ -1,11 +1,11 @@
 from django.db import models
+from email.policy import default
 DATE_INPUT_FORMATS = ('%d-%m-%Y')
 
 # Create your models here.
 class Libro(models.Model):
     ISBN = models.CharField(max_length=200)
     titulo = models.CharField(max_length=200)
-    autor = models.CharField(max_length=200)
     fecha_de_ingreso = models.DateTimeField()
     
     def __str__(self):
@@ -18,7 +18,7 @@ class Copia(models.Model):
     estado = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.ISBN
+        return str(self.ISBN)
     
 #Morososo falso por omision
 class Socio(models.Model):
@@ -29,7 +29,18 @@ class Socio(models.Model):
     estado = models.BooleanField(default=False)
     
     def __str__(self):
-        return self.nombre
+        return (self.nombre)
+    
+#Autor
+class Autor(models.Model):
+    CI = models.CharField(max_length=200)
+    nombre = models.CharField(max_length=200)
+    correo = models.EmailField()
+    resumen = models.CharField(max_length=400, default='')
+    fecha_nacimiento = models.DateTimeField()
+
+    def __str__(self):
+        return (self.nombre)    
     
 #Prestado falso por omision
 class Prestamo(models.Model):
@@ -49,4 +60,8 @@ class Devolucion(models.Model):
     
     def __str__(self):
         return "%s %s" % (self.ISBN, self.CI)
+    
+class Autores_Libros(models.Model):
+    autores = models.ManyToManyField(Autor)
+    libros = models.ManyToManyField(Libro)
     

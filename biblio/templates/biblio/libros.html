@@ -1,0 +1,36 @@
+{% extends "biblio/base_generic.html" %}
+	{% block content %} 
+		 <hr class="mt-2">
+		 <!-- Card Columns Example Social Feed-->
+          <div class="mb-0 mt-4">
+            <i class="fa fa-newspaper-o"></i> Libros Disponibles</div>
+          <hr class="mt-2">
+          <div class="card-columns">
+          {% for libro in libros %}
+            <!-- Example Social Card-->
+            <div class="card mb-3">
+              <a href="#">
+                <img class="card-img-top img-fluid w-100" src="https://unsplash.it/700/450?image=610" alt="">
+              </a>
+              <div class="card-body">
+                <h6 class="card-title mb-1"><a href="/biblio/libro/{{ libro.id }}/">{{ libro.titulo }}</a></h6>
+                <p class="card-text small">Reseña del libro</p>
+              </div>
+              <hr class="my-0">
+              <div class="card-body py-2 small">
+              <p class="card-text medium">ISBN: {{ libro.ISBN }}</p>
+              </div>
+              <hr class="my-0">
+              <div class="card-body small bg-faded">
+                <div class="media">
+                  <img class="d-flex mr-3" src="http://placehold.it/45x45" alt="">
+                  <div class="media-body">
+                    <h6 class="mt-0 mb-1"><a href="#">{{ libro.autor }}</a></h6>Descripcion autor
+                  </div>
+                </div>
+              </div>
+              <div class="card-footer small text-muted">Fecha de ingreso: {{ libro.fecha_de_ingreso }}</div>
+            </div>
+            {% endfor %}
+          </div>
+{% endblock %}

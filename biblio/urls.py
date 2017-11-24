@@ -21,23 +21,49 @@ urlpatterns = [
     # ex: /biblio/
     url(r'^$', views.index, name='index'),
     # ex: /biblio/prestamos
-    #url(r'^prestamos$', views.index, name='prestamos'),
-    # ex: /biblio/prestamo/id/isbn
-    #url(r'^(?P<socio_id>[0-9]+)/(?P<isbn>[0-9]+)/$', views.index, name='prestamo'),
+    url(r'^prestamos/$', views.prestamos, name='prestamos'),
+    # ex: /biblio/prestamo/5
+    url(r'^prestamo/(?P<prestamo_id>[0-9]+)/$', views.detalle_prestamo, name='detalle_prestamo'),
+    # ex: /biblio/prestamo/nuevo    
+    url(r'^prestamo/nuevo$', views.prestamo_nuevo, name='prestamo_nuevo'),
     # ex: /biblio/devoluciones
-    #url(r'^devoluciones$', views.index, name='devoluciones'),
-    # ex: /biblio/devolucion/id/inventario
-    #url(r'^(?P<socio_id>[0-9]+)/(?P<inventario_id>[0-9]+)/$', views.index, name='devolucion'),
+    url(r'^devoluciones$', views.devoluciones, name='devoluciones'),
+    # ex: /biblio/devolucion/nueva
+    url(r'^devolucion/(?P<devolucion_id>[0-9]+)/$', views.detalle_devolucion, name='detalle_devolucion'),
+    # ex: /biblio/devolucion/nueva
+    url(r'^devolucion/nueva$', views.devolucion_nueva, name='devolucion_nueva'),
     # ex: /biblio/socios
-     url(r'^(?P<pk>[0-9]+)/socios/$', views.ResultsView.as_view(), name='socios'),
+     url(r'^socios/activos$', views.activos, name='activos'),
+    # ex: /biblio/morosos
+    url(r'^socios/morosos$', views.morosos, name='morosos'), 
+    # ex: /biblio/socio/5
+    url(r'^socio/(?P<socio_id>[0-9]+)/$', views.detalle_socio, name='detalle_socio'),
     # ex: /biblio/futuros morosos
-    #url(r'^futuros_morosos$', views.index, name='futuros_morosos'),    
-    # ex: /biblio/socios/5
-    #url(r'^(?P<socio_id>[0-9]+)/$', views.detail, name='detalle_socio'),
+    url(r'^socios/futuros_morosos$', views.futuros_morosos, name='futuros_morosos'),    
+    # ex: /biblio/socio/nuevo
+    url(r'^socio/nuevo$', views.socio_nuevo, name='socio_nuevo'),
+        # ex: /biblio/autores
+     url(r'^autores$', views.autores, name='autores'),
+    # ex: /biblio/autor/5
+    url(r'^autor/(?P<autor_id>[0-9]+)/$', views.detalle_autor, name='detalle_autor'),  
+    # ex: /biblio/socio/nuevo
+    url(r'^autor/nuevo$', views.autor_nuevo, name='autor_nuevo'),
     # ex: /biblio/copia/5
-    #url(r'^(?P<inventario_id>[0-9]+)/$', views.detail, name='detalle_cpia'),  
+    url(r'^(?P<inventario_id>[0-9]+)/$', views.detalle_copia, name='detalle_cpia'),  
     # ex: /biblio/libro/5
     url(r'^libro/(?P<libro_id>[0-9]+)/$', views.detalle_libro, name='detalle_libro'),
     #ex: /bilblio/libros
     url(r'^libros/$', views.libros, name='libros'),
+    # ex: /biblio/libro/nuevo
+    url(r'^libro/nuevo$', views.libro_nuevo, name='libro_nuevo'),
+    # ex: /biblio/autor/5
+    url(r'^autor/(?P<autor_id>[0-9]+)/$', views.detalle_autor, name='detalle_autor'),
+    # ex: /biblio/autores
+     url(r'^autores$', views.autores, name='autores'),
+     # ex: /biblio/autor/nuevo
+    url(r'^autor/nuevo$', views.autor_nuevo, name='autor_nuevo'),
+    # ex: /biblio/autores_libros
+    url(r'^autores_libros/$', views.autores_libros, name='autores_libros'),
+    # ex: /biblio/autores_libros
+    url(r'^autores_libros/(?P<autor_id>[0-9]+)/(?P<libro_id>[0-9]+)/$', views.autores_libros_nuevo, name='autores_libros_nuevo'),
 ]

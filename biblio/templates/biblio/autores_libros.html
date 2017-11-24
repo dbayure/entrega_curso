@@ -1,0 +1,50 @@
+{% extends "biblio/base_generic.html" %}
+{% load bootstrap4 %}
+{% block content %}
+ <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> Autores y sus Libros</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Titulo</th>
+                  <th>ISBN</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>ID</th>
+                  <th>Nombre</th>
+                  <th>Titulo</th>
+                  <th>ISBN</th>
+                </tr>
+              </tfoot>
+              <tbody>
+              {% for a_l in al %}
+                <tr>
+                  <td>{{ a_l.id }}</td>
+                  <td>{{ a_l.autor.nombre }}</td>
+                  <td>{{ a_l.libro.nombre }}</td>
+                  <td>{{ a_l.libro.ISBN }}</td>
+                {% endfor %}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+       <hr class="mt-2">
+<h1>Devolver Libro</h1>
+	<div class="col-lg-8">
+		<form method="post" class="form">
+    		{% csrf_token %}
+    		{% bootstrap_form form %}
+    		{% buttons %}
+        		<button type="submit" class="btn btn-primary">Guardar</button>
+    		{% endbuttons %}
+		</form>
+    </div>
+{% endblock %}

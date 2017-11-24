@@ -1,0 +1,45 @@
+{% extends "biblio/base_generic.html" %}
+{% block content %}
+ <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> Autores</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                  <th>ID</th>
+                  <th>CI</th>
+                  <th>Nombre</th>
+                  <th>Correo</th>
+                  <th>Fecha Nacimiento</th>
+                  <th>Resumen</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                  <th>ID</th>
+                  <th>CI</th>
+                  <th>Nombre</th>
+                  <th>Correo</th>
+                  <th>Fecha Nacimiento</th>
+                  <th>Resumen</th>
+                </tr>
+              </tfoot>
+              <tbody>
+              {% for autor in autores %}
+                <tr>
+                  <td><a href="/biblio/autor/{{ autor.id }}/">{{ autor.id }}</td>
+                  <td>{{ autor.CI }}</td>
+                  <td>{{ autor.nombre }}</td>
+                  <td>{{ autor.correo }}</td>
+                  <td>{{ autor.fecha_nacimiento }}</td>
+                  <td>{{ autor.resumen }}</td>
+                {% endfor %}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+{% endblock %}
+

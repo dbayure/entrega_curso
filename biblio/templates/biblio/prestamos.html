@@ -1,0 +1,45 @@
+{% extends "biblio/base_generic.html" %}
+
+{% block content %}
+ <div class="card mb-3">
+        <div class="card-header">
+          <i class="fa fa-table"></i> Prestamos</div>
+        <div class="card-body">
+          <div class="table-responsive">
+            <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
+              <thead>
+                <tr>
+                 <th>ID</th>
+                  <th>ISBN</th>
+                  <th>CI</th>
+                  <th>Fecha Comienzo</th>
+                  <th>Fecha Fin</th>
+                  <th>Estado</th>
+                </tr>
+              </thead>
+              <tfoot>
+                <tr>
+                 <th>ID</th>
+                  <th>ISBN</th>
+                  <th>CI</th>
+                  <th>Fecha Comienzo</th>
+                  <th>Fecha Fin</th>
+                  <th>Estado</th>
+                </tr>
+              </tfoot>
+              <tbody>
+              {% for prestamo in prestamos %}
+                <tr>
+                  <td><a href="/biblio/prestamo/{{ prestamo.id }}/">{{ prestamo.id }}</td>
+                  <td>{{ prestamo.ISBN }}</td>
+                  <td>{{ prestamo.CI }}</td>
+                  <td>{{ prestamo.fecha_comienzo }}</td>
+                  <td>{{ prestamo.fecha_fin }}</td>
+                  <td>{{ prestamo.estado }}</td>
+                {% endfor %}
+                </tr>
+              </tbody>
+            </table>
+          </div>
+        </div>
+{% endblock %}
