@@ -33,6 +33,8 @@ ALLOWED_HOSTS = []
 INSTALLED_APPS = [
     'biblio.apps.BiblioConfig',
     'bootstrap4',
+    'django_bootstrap_select',
+    'bootstrap_select.apps.BootstrapSelectConfig',
     'django.contrib.admin',
     'django.contrib.auth',
     'django.contrib.contenttypes',

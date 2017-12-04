@@ -1,42 +1,49 @@
 {% extends "biblio/base_generic.html" %}
 {% load staticfiles%}
-	{% block content %} 
-		 <hr class="mt-2">
+{% load bootstrap4 %}
+{% load django_bootstrap_select_tags %}
+{% block content %}
+ <hr class="mt-2">
 		 <!-- Card Columns Example Social Feed-->
           <div class="mb-0 mt-4">
-            <i class="fa fa-newspaper-o"></i> Libros Disponibles</div>
+            <i class="fa fa-newspaper-o"></i> Detalle Copia</div>
           <hr class="mt-2">
           <div class="card-columns">
-          {% for libro in libros %}
             <!-- Example Social Card-->
             <div class="card mb-3">
               <a href="#">
                 <img class="card-img-top img-fluid w-100" src="{% static 'sb-admin/images/libropilarsordo.jpg' %}" alt="">
               </a>
               <div class="card-body">
-                <h6 class="card-title mb-1"><a href="/biblio/libro/{{ libro.id }}/">{{ libro.titulo }}</a></h6>
-                 <p class="card-text small">{{ libro.resumen }}</p>
+                <h6 class="card-title mb-1">{{ copia.ISBN.titulo }}</h6>
+                <p class="card-text small">{{ copia.ISBN.resumen }}</p>
               </div>
+              <div id="accordion">
+              <div class="card-body">
+              {% if not copia.estado %}
+   				<a href="/biblio/prestamo/nuevo/{{ copia.id }}/">Prestar Copia</a>
+			  {% endif %}
+			  </div>
+			  </div>
               <hr class="my-0">
               <div class="card-body py-2 small">
-              <p class="card-text medium">ISBN: {{ libro.ISBN }}</p>
+              <p class="card-text medium">ISBN: {{ copia.ISBN.ISBN }}</p>
               </div>
               <hr class="my-0">
-              
               <div class="card-body small bg-faded">
               <h6 class="card-title mb-1">Autores</h6>
                 <div class="media">
                     <div class="list-group">
-                    {% for autor in libro.autor_set.all %}
+                    {% for autor in copia.ISBN.autor_set.all %}
 	                    <img class="d-flex mr-3" src="{% static 'sb-admin/images/pilarsordo.jpeg' %}" alt="">
 	      				<a href="/biblio/autor/{{ autor.id }}/">{{ autor.nombre }}</a>
     				{% endfor %}
+    				
                     </div>
                 </div>
               </div>
-              
-              <div class="card-footer small text-muted">Fecha de ingreso: {{ libro.fecha_de_ingreso }}</div>
+              <div class="card-footer small text-muted">Fecha de ingreso: {{ copia.ISBN..fecha_de_ingreso }}</div>
             </div>
-            {% endfor %}
           </div>
+           
 {% endblock %}

@@ -4,9 +4,10 @@ from django.urls import reverse
 from django.views import generic
 from django.template import loader
 from django.http import HttpResponse
-from .forms import PrestamoForm, LibroForm, DevolucionForm, SocioForm, AutorForm, Autor_LibroForm
+from .forms import PrestamoForm, PrestamoIdForm, LibroForm, DevolucionForm, SocioForm, AutorForm, PickAutorForm, CopiaForm
 
-from .models import Libro, Copia, Socio, Prestamo, Devolucion, Autor, Autores_Libros
+from .models import Libro, Copia, Socio, Prestamo, Devolucion, Autor
+from .extras import puedo_prestar, socio_moroso, futuro_moroso
 
 def index(request):
     return render(request, 'biblio/index.html')
@@ -18,13 +19,16 @@ def libros(request):
 
 def detalle_libro(request, libro_id):
     libro = get_object_or_404(Libro, pk=libro_id)
-    return render(request, 'biblio/detalle_libro.html', {'libro': libro})
+    form = PickAutorForm()
+    context = {'form' : form, 'libro': libro}
+    return render(request, 'biblio/detalle_libro.html', context)
 
 def libro_nuevo(request):
     if request.method == "POST":
         form = LibroForm(request.POST)
         if form.is_valid():
             libro = form.save()
+            libro.save()
     form = LibroForm()
     return render(request, 'biblio/libro_nuevo.html', {'form': form})
 
@@ -37,19 +41,47 @@ def detalle_prestamo(request, prestamo_id):
     prestamo = get_object_or_404(Prestamo, pk=prestamo_id)
     return render(request, 'biblio/detalle_prestamo.html', {'prestamo': prestamo})
 
-def prestamo_nuevo(request):
-    if request.method == "POST":
-        form = PrestamoForm(request.POST)
-        if form.is_valid():
-            prestamo = form.save()
-            return prestamos(request)
-    else:
+def prestamo_nuevo(request, copia_id=0):
+    mensaje = ""
+    print ("valore del id de la copia que viene {}".format(copia_id))
+    if copia_id == 0:
+        if request.method == "POST":
+            form = PrestamoForm(request.POST)
+            if form.is_valid():
+                socio = form.cleaned_data['socio']
+                copia = form.cleaned_data['copia']
+                if puedo_prestar(socio, copia):
+                    prestamo = form.save()
+                    copia.estado=True
+                    copia.save()
+                    mensaje = "Prestamo realizado correctamente"
+                else:
+                    mensaje = "Erro al realizar el prestamo, no existen copias disponibles o el usuario esta moroso"
         form = PrestamoForm()
-    return render(request, 'biblio/prestamo_nuevo.html', {'form': form})
+        context = {'msg' : mensaje, 'form': form}     
+        return render(request, 'biblio/prestamo_nuevo.html', context)
+    else: 
+        copia = get_object_or_404(Copia, pk=copia_id)
+        if request.method == "POST":
+            form = PrestamoIdForm(request.POST)
+            if form.is_valid():
+                socio = form.cleaned_data['socio']
+                if puedo_prestar(socio, copia):
+                    prestamo = form.save(commit=False)
+                    prestamo.copia=copia
+                    prestamo.save()
+                    copia.estado=True
+                    copia.save()
+                    mensaje = "Prestamo realizado correctamente"
+                else:
+                    mensaje = "Erro al realizar el prestamo, no existen copias disponibles o el usuario esta moroso"
+        form = PrestamoIdForm()   
+        context = {'msg' : mensaje, 'form': form}     
+        return render(request, 'biblio/prestamo_nuevo.html', context)
    
 def devoluciones (request):
-    total_devoluciones = Devolucion.objects.order_by('-id')[:5]
-    context = {'lista_devoluciones' : total_devoluciones}
+    devoluciones = Devolucion.objects.order_by('-id')
+    context = {'devoluciones' : devoluciones}
     return render(request, 'biblio/devoluciones.html', context)
 
 def detalle_devolucion (request, devolucion_id):
@@ -60,10 +92,10 @@ def devolucion_nueva(request):
     if request.method == "POST":
         form = DevolucionForm(request.POST)
         if form.is_valid():
-            devolucion = form.save()
-            return devoluciones(request)
-    else:
-        form = DevolucionForm()
+            devolucion = form.save(commit=False)    
+            if socio_moroso(devolucion.socio, devolucion.copia, form.cleaned_data['fecha_devolucion']):
+                devolucion.save()
+    form = DevolucionForm()
     return render(request, 'biblio/devolucion_nueva.html', {'form': form})
 
 def activos (request):
@@ -72,21 +104,19 @@ def activos (request):
     return render(request, 'biblio/activos.html', context)
 
 def morosos (request):
-    morosos = Socio.objects.order_by('-id')[:5]
+    morosos = Socio.objects.all().filter(estado=True)
     context = {'morosos' : morosos}
     return render(request, 'biblio/morosos.html', context)
    
 def futuros_morosos (request):
-    futuros_morosos = Socio.objects.order_by('-id')[:5]
-    context = {'futuros_morosos' : futuros_morosos}
+    fm = Socio.objects.order_by('-id')[:5]
+    morosos = futuro_moroso(fm)
+    context = {'futuros_morosos' : morosos}
     return render(request, 'biblio/futuros_morosos.html', context)
    
 def detalle_socio (request,socio_id):
     socio = get_object_or_404(Socio, pk=socio_id)
     return render(request, 'biblio/detalle_socio.html', {'socio': socio})
-   
-def detalle_copia (request):
-    pass
    
 def socios(request):
     socios = Socio.objects.order_by('-id')[:5]
@@ -122,20 +152,33 @@ def autor_nuevo(request):
     form = AutorForm()
     return render(request, 'biblio/autor_nuevo.html', {'form': form})
 
-def autores_libros(request):
-    autores = Autor.objects.order_by('-id')
-    libros = Libro.objects.order_by('-id')
-    al = Autores_Libros.objects.order_by('-autores')
-    context = {'autores' : autores, 'libros' : libros, 'al': al}
-    return render(request, 'biblio/autores_libros.html', context)
+def copias (request):
+    copias = Copia.objects.order_by('-id')
+    context = {'copias' : copias}
+    return render(request, 'biblio/copias.html', context)
 
-def autores_libros_nuevo(request, autor_id, libro_id):
-    autor = get_object_or_404(Autor, pk=autor_id)
+def detalle_copia (request, copia_id):
+    copia = get_object_or_404(Copia, pk=copia_id)
+    return render(request, 'biblio/detalle_copia.html', {'copia': copia})
+   
+def copia_nueva(request):
+    if request.method == "POST":
+        form = CopiaForm(request.POST)
+        if form.is_valid():
+            copia = form.save()
+    form = CopiaForm()
+    return render(request, 'biblio/copia_nueva.html', {'form': form})
+
+
+def actualizar_autor(request, libro_id):
     libro = get_object_or_404(Libro, pk=libro_id)
-    al = Autores_Libros()
-    al.autores.add(autor)
-    al.libros.add(libro)
-    al.save()
-    return render(request, 'biblio/autores_libros.html', context)
-
-
+    if request.method == "POST":
+        form = PickAutorForm(request.POST)
+        id_dic = dict(form.data)
+        id_list = id_dic["autores"]
+        for id in id_list:
+            autor = get_object_or_404(Autor, pk=id)
+            autor.libros_publicados.add(libro)
+    form = PickAutorForm()
+    context = {'form' : form, 'libro': libro}
+    return render(request, 'biblio/detalle_libro.html', context)

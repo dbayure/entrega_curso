@@ -20,12 +20,20 @@ app_name = 'biblio'
 urlpatterns = [
     # ex: /biblio/
     url(r'^$', views.index, name='index'),
+    # ex: /biblio/copia/5
+    url(r'^copia/(?P<copia_id>[0-9]+)/$', views.detalle_copia, name='detalle_copia'),
+    #ex: /bilblio/copias
+    url(r'^copias/$', views.copias, name='copias'),
+    # ex: /biblio/copia/nueva
+    url(r'^copia/nueva$', views.copia_nueva, name='copia_nueva'),
     # ex: /biblio/prestamos
     url(r'^prestamos/$', views.prestamos, name='prestamos'),
     # ex: /biblio/prestamo/5
     url(r'^prestamo/(?P<prestamo_id>[0-9]+)/$', views.detalle_prestamo, name='detalle_prestamo'),
     # ex: /biblio/prestamo/nuevo    
     url(r'^prestamo/nuevo$', views.prestamo_nuevo, name='prestamo_nuevo'),
+    # ex: /biblio/prestamo/nuevo/5    
+    url(r'^prestamo/nuevo/(?P<copia_id>[0-9]+)/$', views.prestamo_nuevo, name='prestamo_nuevo'),    
     # ex: /biblio/devoluciones
     url(r'^devoluciones$', views.devoluciones, name='devoluciones'),
     # ex: /biblio/devolucion/nueva
@@ -62,8 +70,6 @@ urlpatterns = [
      url(r'^autores$', views.autores, name='autores'),
      # ex: /biblio/autor/nuevo
     url(r'^autor/nuevo$', views.autor_nuevo, name='autor_nuevo'),
-    # ex: /biblio/autores_libros
-    url(r'^autores_libros/$', views.autores_libros, name='autores_libros'),
-    # ex: /biblio/autores_libros
-    url(r'^autores_libros/(?P<autor_id>[0-9]+)/(?P<libro_id>[0-9]+)/$', views.autores_libros_nuevo, name='autores_libros_nuevo'),
+     # ex: /biblio/autor/actualizar
+    url(r'^autor/actualizar/(?P<libro_id>[0-9]+)/$', views.actualizar_autor, name='actualizar_autor'),    
 ]

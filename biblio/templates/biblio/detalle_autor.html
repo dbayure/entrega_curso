@@ -1,8 +1,36 @@
 {% extends "biblio/base_generic.html" %}
-
+{% load staticfiles%}
+{% load bootstrap4 %}
+{% load django_bootstrap_select_tags %}
 {% block content %}
-<h1>ID -- {{ autor.id }}</h1>
-<h1>Nombre -- {{ autor.nombre }}</h1>
-<h1>Correo -- {{ autor.correo }}</h1>
-   
+ <hr class="mt-2">
+		 <!-- Card Columns Example Social Feed-->
+          <div class="mb-0 mt-4">
+            <i class="fa fa-newspaper-o"></i> Detalle Autor</div>
+          <hr class="mt-2">
+          <div class="card-columns">
+            <!-- Example Social Card-->
+            <div class="card mb-3">
+              <a href="#">
+                <img class="card-img-top img-fluid w-100" src="{% static 'sb-admin/images/pilarsordo.jpeg' %}" alt="">
+              </a>
+              <div class="card-body">
+                <h6 class="card-title mb-1">{{ autor.nombre }}</h6>
+                <h6 class="card-title mb-1">{{ autor.correo }}</h6>
+                <p class="card-text small">{{ autor.resumen }}</p>
+              </div>
+              <hr class="my-0">
+              <div class="card-body small bg-faded">
+              <h6 class="card-title mb-1">Libros Publicados</h6>
+                <div class="media">
+                    <div class="list-group">
+                    {% for libro in autor.libros_publicados.all %}
+	      				<a href="/biblio/libro/{{ libro.id }}/">{{ libro.titulo }}</a>
+    				{% endfor %}
+                    </div>
+                </div>
+              </div>
+            </div>
+          </div>
+          
 {% endblock %}

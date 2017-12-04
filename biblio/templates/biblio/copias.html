@@ -2,33 +2,33 @@
 {% block content %}
  <div class="card mb-3">
         <div class="card-header">
-          <i class="fa fa-table"></i> Devoluciones</div>
+          <i class="fa fa-table"></i> Copias</div>
         <div class="card-body">
           <div class="table-responsive">
             <table class="table table-bordered" id="dataTable" width="100%" cellspacing="0">
               <thead>
                 <tr>
                   <th>ID</th>
+                  <th>Inventario</th>
                   <th>ISBN</th>
-                  <th>CI</th>
-                  <th>Fecha Devolucion</th>
+                  <th>Estado</th>
                 </tr>
               </thead>
               <tfoot>
                 <tr>
                   <th>ID</th>
+                  <th>Inventario</th>
                   <th>ISBN</th>
-                  <th>CI</th>
-                  <th>Fecha Devolucion</th>
+                  <th>Estado</th>
                 </tr>
               </tfoot>
               <tbody>
-              {% for devolucion in devoluciones %}
+              {% for copia in copias %}
                 <tr>
-                  <td><a href="/biblio/devolucion/{{ devolucion.id }}/">{{ devolucion.id }}</td>
-                  <td>{{ devolucion.copia }}</td>
-                  <td>{{ devolucion.socio }}</td>
-                  <td>{{ devolucion.fecha_devolucion }}</td>
+                  <td><a href="/biblio/copia/{{ copia.id }}/">{{ copia.id }}</td>
+                  <td>{{ copia.inventario }}</td>                  
+                  <td>{{ copia.ISBN }}</td>
+                  <td>{{ copia.estado|yesno:"Prestado,Disponible" }}</td>
                 {% endfor %}
                 </tr>
               </tbody>
