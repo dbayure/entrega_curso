@@ -1,8 +1,50 @@
 {% extends "biblio/base_generic.html" %}
-
+{% load staticfiles%}
+{% load bootstrap4 %}
+{% load django_bootstrap_select_tags %}
 {% block content %}
-<h1>ISBN -- {{ devolucion.ISBN }}</h1>
-<h1>Socio -- {{ devolucion.CI }}</h1>
-<h1>Fecha -- {{ devolucion.fecha_devolucion }}</h1>
-   
+ <hr class="mt-2">
+		 <!-- Card Columns Example Social Feed-->
+          <div class="mb-0 mt-4">
+            <i class="fa fa-newspaper-o"></i> Detalle Devolución
+          </div>
+           <hr class="mt-2">
+            <div class="card mb-3">
+              <div class="card-body">
+              <div class="row">
+              <div class="col-sm-3">
+              	<h6 class="card-title mb-1">Titulo:</h6>
+              	<h6 class="card-title mb-1">Inventario:</h6>
+              	<h6 class="card-title mb-1">Fecha devolucion:</h6>
+              	<h6 class="card-title mb-1">Resumen:</h6>
+              </div>
+              <div class="col-sm-9">
+                <h6 class="card-text mb-1">{{ devolucion.copia }}</h6>
+                <h6 class="card-title mb-1">{{ devolucion.copia.inventario }}</h6>
+                <h6 class="card-title mb-1">{{ devolucion.fecha_devolucion }}</h6>
+                <h6 class="card-title mb-1">{{ devolucion.copia.ISBN.resumen }}</h6>
+              </div>
+                </div>
+                
+
+              </div>
+            </div>
+          <div class="mb-0 mt-4">
+            <i class="fa fa-newspaper-o"></i> Socio
+          </div>
+          <hr class="mt-2">
+          <div class="card-columns">
+            <!-- Example Social Card-->
+            <div class="card mb-3">
+              <a href="#">
+                <img class="card-img-top img-fluid w-100" src="{% static 'sb-admin/images/pilarsordo.jpeg' %}" alt="">
+              </a>
+              <div class="card-body">
+                <h6 class="card-title mb-1">{{ devolucion.socio.nombre }}</h6>
+                <h6 class="card-title mb-1">{{ devolucion.socio.correo }}</h6>
+                <p class="card-text small">{{ devolucion.socio.fecha_nacimiento }}</p>
+              </div>
+            </div>
+          </div>
+          
 {% endblock %}

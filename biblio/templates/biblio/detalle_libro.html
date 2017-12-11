@@ -11,8 +11,8 @@
           <div class="card-columns">
             <!-- Example Social Card-->
             <div class="card mb-3">
-              <a href="#">
-                <img class="card-img-top img-fluid w-100" src="{% static 'sb-admin/images/libropilarsordo.jpg' %}" alt="">
+              <a href="#"> 
+                <img class="card-img-top img-fluid w-100" src="{% static 'sb-admin/images/'%}{{ libro.ISBN }}.jpg" alt="">
               </a>
               <div class="card-body">
                 <h6 class="card-title mb-1">{{ libro.titulo }}</h6>
@@ -43,7 +43,7 @@
                 <div class="media">
                     <div class="list-group">
                     {% for autor in libro.autor_set.all %}
-	                    <img class="d-flex mr-3" src="{% static 'sb-admin/images/pilarsordo.jpeg' %}" alt="">
+	                    <img class="d-flex mr-3" src="{% static 'sb-admin/images/' %}{{ autor.CI}}.jpg" alt="">
 	      				<a href="/biblio/autor/{{ autor.id }}/">{{ autor.nombre }}</a>
     				{% endfor %}
                     </div>

@@ -55,7 +55,7 @@ class Prestamo(models.Model):
     estado = models.BooleanField(default=False)
     
     def __str__(self):
-        return "%s %s" % (self.copia, self.socio)
+        return "%s" % (self.id)
     
     @classmethod
     def create(cls, ISBN, CI, fecha_comienzo):
@@ -69,6 +69,6 @@ class Devolucion(models.Model):
     fecha_devolucion = models.DateTimeField()
     
     def __str__(self):
-        return "%s %s" % (self.copia, self.socio)
+        return "%s" % (self.id)
 
     

@@ -31,7 +31,7 @@
                   <td>{{ socio.nombre }}</td>
                   <td>{{ socio.correo }}</td>
                   <td>{{ socio.fecha_nacimiento }}</td>
-                  <td>{{ socio.estado }}</td>
+                  <td>{{ socio.estado|yesno:"Moroso,Activo" }}</td>
                 {% endfor %}
                 </tr>
               </tbody>

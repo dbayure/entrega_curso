@@ -5,6 +5,7 @@ from django.views import generic
 from django.template import loader
 from django.http import HttpResponse
 from .forms import PrestamoForm, PrestamoIdForm, LibroForm, DevolucionForm, SocioForm, AutorForm, PickAutorForm, CopiaForm
+from datetime import datetime, date, time, timedelta
 
 from .models import Libro, Copia, Socio, Prestamo, Devolucion, Autor
 from .extras import puedo_prestar, socio_moroso, futuro_moroso
@@ -88,18 +89,36 @@ def detalle_devolucion (request, devolucion_id):
     devolucion = get_object_or_404(Devolucion, pk=devolucion_id)
     return render(request, 'biblio/detalle_devolucion.html', {'devolucion': devolucion})
    
-def devolucion_nueva(request):
-    if request.method == "POST":
-        form = DevolucionForm(request.POST)
-        if form.is_valid():
-            devolucion = form.save(commit=False)    
-            if socio_moroso(devolucion.socio, devolucion.copia, form.cleaned_data['fecha_devolucion']):
+def devolucion_nueva(request, prestamo_id=0):
+    if prestamo_id == 0:
+        if request.method == "POST":
+            form = DevolucionForm(request.POST)
+            if form.is_valid():
+                devolucion = form.save(commit=False)    
+                socio_moroso(devolucion.socio, devolucion.copia, form.cleaned_data['fecha_devolucion'])
                 devolucion.save()
-    form = DevolucionForm()
-    return render(request, 'biblio/devolucion_nueva.html', {'form': form})
+    else:
+        devolucion = Devolucion()
+        fecha_devolucion = date.today()
+        prestamo = get_object_or_404(Prestamo, pk=prestamo_id)
+        copia = get_object_or_404(Copia, pk=prestamo.copia.id)
+        socio = get_object_or_404(Socio, pk=prestamo.socio.id)
+        devolucion.copia = copia
+        devolucion.socio = socio
+        devolucion.estado = True
+        devolucion.fecha_devolucion = fecha_devolucion
+        devolucion.save()
+        copia.estado = False
+        copia.save()
+        prestamo.estado = True
+        prestamo.save()
+        socio_moroso(socio,copia, fecha_devolucion)
+    devoluciones = Devolucion.objects.order_by('-id')
+    context = {'devoluciones' : devoluciones}
+    return render(request, 'biblio/devoluciones.html', context)
 
 def activos (request):
-    activos = Socio.objects.order_by('-id')[:5]
+    activos = Socio.objects.order_by('-id')
     context = {'activos' : activos}
     return render(request, 'biblio/activos.html', context)
 
@@ -109,8 +128,8 @@ def morosos (request):
     return render(request, 'biblio/morosos.html', context)
    
 def futuros_morosos (request):
-    fm = Socio.objects.order_by('-id')[:5]
-    morosos = futuro_moroso(fm)
+    socios = Socio.objects.order_by('-id')
+    morosos = futuro_moroso(socios)
     context = {'futuros_morosos' : morosos}
     return render(request, 'biblio/futuros_morosos.html', context)
    

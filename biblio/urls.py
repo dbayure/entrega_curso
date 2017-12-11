@@ -34,16 +34,14 @@ urlpatterns = [
     url(r'^prestamo/nuevo$', views.prestamo_nuevo, name='prestamo_nuevo'),
     # ex: /biblio/prestamo/nuevo/5    
     url(r'^prestamo/nuevo/(?P<copia_id>[0-9]+)/$', views.prestamo_nuevo, name='prestamo_nuevo'),    
-    # ex: /biblio/devoluciones
-    url(r'^devoluciones$', views.devoluciones, name='devoluciones'),
     # ex: /biblio/devolucion/nueva
     url(r'^devolucion/(?P<devolucion_id>[0-9]+)/$', views.detalle_devolucion, name='detalle_devolucion'),
     # ex: /biblio/devolucion/nueva
     url(r'^devolucion/nueva$', views.devolucion_nueva, name='devolucion_nueva'),
+    # ex: /biblio/devolucion/nueva/5
+    url(r'^devolucion/nueva/(?P<prestamo_id>[0-9]+)/$', views.devolucion_nueva, name='devolucion_nueva'),    
     # ex: /biblio/socios
      url(r'^socios/activos$', views.activos, name='activos'),
-    # ex: /biblio/morosos
-    url(r'^socios/morosos$', views.morosos, name='morosos'), 
     # ex: /biblio/socio/5
     url(r'^socio/(?P<socio_id>[0-9]+)/$', views.detalle_socio, name='detalle_socio'),
     # ex: /biblio/futuros morosos

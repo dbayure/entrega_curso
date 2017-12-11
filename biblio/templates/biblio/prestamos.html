@@ -35,7 +35,7 @@
                   <td>{{ prestamo.socio }}</td>
                   <td>{{ prestamo.fecha_comienzo }}</td>
                   <td>{{ prestamo.fecha_fin }}</td>
-                  <td>{{ prestamo.estado|yesno:"Pendiente,Terminado" }}</td>
+                  <td>{{ prestamo.estado|yesno:"Terminado,Pendiente" }}</td>
                 {% endfor %}
                 </tr>
               </tbody>

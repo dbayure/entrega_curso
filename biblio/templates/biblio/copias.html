@@ -27,7 +27,7 @@
                 <tr>
                   <td><a href="/biblio/copia/{{ copia.id }}/">{{ copia.id }}</td>
                   <td>{{ copia.inventario }}</td>                  
-                  <td>{{ copia.ISBN }}</td>
+                  <td>{{ copia.ISBN.titulo }}</td>
                   <td>{{ copia.estado|yesno:"Prestado,Disponible" }}</td>
                 {% endfor %}
                 </tr>
